@@ -12,7 +12,7 @@ export default defineConfig(({mode}) => {
     build: {
       outDir: 'dist',
       rollupOptions: {
-        input: './src/index.html'
+        input: './index.html'
       }
     },
     define: {

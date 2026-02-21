@@ -1,11 +1,10 @@
 import express from 'express';
-import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import fs from 'fs';
 import cors from 'cors';
-import { initDb } from './db/index';
-import authRoutes from './routes/auth';
-import resourceRoutes from './routes/resources';
+import { initDb } from '../db/index';
+import authRoutes from '../routes/auth';
+import resourceRoutes from '../routes/resources';
 
 const PORT = 3001;
 
@@ -29,22 +28,6 @@ async function startServer() {
   // API Routes
   app.use('/api/auth', authRoutes);
   app.use('/api/resources', resourceRoutes);
-
-  // Vite Middleware (for development)
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else {
-    // Production: Serve built assets
-    const distPath = path.resolve('dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
-  }
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
